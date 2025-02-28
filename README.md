@@ -58,5 +58,70 @@ Below is an HTML example that demonstrates how to use the library:
 ```
 In this example the user inputs a move sequence `'4251'` into the text field. When the button is clicked, the `getBestMove` function is called and the best move (as a column numbered from 0 to 6) is displayed.
 
+## How To Build
+
+### Prerequisites:
+
+- **Node.js and npm:**  
+  Make sure you have [`Node.js and npm`](https://nodejs.org) installed.
+
+- **Brotli:**  
+  The build process requires the Brotli command-line tool.
+
+  - **Linux:**  
+    ```bash
+    sudo apt update
+    sudo apt install brotli
+    ```
+
+  - **Windows:**  
+    You can install Brotli via [`Chocolatey`](https://chocolatey.org) by running:
+    ```powershell
+    choco install brotli
+    ```
+    Alternatively, download and install Brotli from its [`GitHub Releases`](https://github.com/google/brotli/releases).
+
+### Building:
+
+1. **Install Dependencies:**  
+   In your project directory, run:
+   ```bash
+   npm install uglify-js simple-git node-fetch
+   ```
+    - Note that dependencies get cleaned after the build.
+
+2. **Run the Build Script:**
+   ```bash
+   node build.js
+   ```
+   - Note that building this takes roughly 1.5 to 2 minutes on average hardware.
+
+### Description:
+
+**Functions of different files:**
+
+   - File b128.js is my library for decoding a custom Base128 string.
+
+   - File c4.js is my rewrite of [`PascalPons`](https://github.com/PascalPons) [`connect4 solver`](https://github.com/PascalPons/connect4) for web-browser JavaScript.
+   - File build.js is for building c4i.js. Read more about it below.
+
+**The build.js script performs the following steps:**
+
+- Fetching Resources:  
+  *It clones the [`brotlijs`](https://github.com/dominikhlbg/brotlijs) repository and downloads the [`book`](https://github.com/PascalPons/connect4/releases/download/book/7x6.book) file.*
+
+- Compressing Book:  
+  *It compresses the book file using Brotli.*
+
+- Encoding Compressed Book:  
+  *The compressed file is then encoded using my custom Base128 algorithm.*
+
+- Processing brotli:  
+  *The script processes `brotli.js` by removing specified line ranges and patching it with an encoded dictionary.*
+
+- Generating c4i:  
+  *It combines multiple source files, replaces a placeholder with the encoded book data, minifies the final output using [`UglifyJS`](https://www.npmjs.com/package/uglify-js) to produce `c4i.js`, and then removes all temporary files and directories created during the build.*
+
 ---
+
 **`Made with ♡ by Neo X.`**
